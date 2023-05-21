@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote Search</title>
+</head>
+<style>
+    .Container {
+        width: 100%;
+        height: min-content;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+    .Container h1{
+        font-size: 50px;
+        font-family: 'Courier New', Courier, monospace;
+        
+    }
+    .Container input
+    {
+        width: 90%;
+        height: 50px;
+    }
+    .Container ul
+    {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 30px;
+    }
+</style>
+
+<body>
+    <div class="Container">
+        <h1>Quote Search</h1>
+
+        <input type="text" id="quoteInput" placeholder="Enter A Quote:">
+
+        <ul id="quoteList">
+        </ul>
+    </div>
+
+
+    <script>
+        let listQuotes = [];
+
+        async function fetchQuotes() {
+            try {
+                const response = await fetch("https://dummyjson.com/quotes");
+                const data = await response.json();
+                listQuotes = data?.quotes;
+                console.log(listQuotes);
+            } catch (error) {
+                console.error("Error fetching quotes:", error);
+            }
+        }
+
+        function searchQuote() {
+            const searchInput = document.getElementById("quoteInput").value;
+            const quoteList = document.getElementById("quoteList");
+            quoteList.innerHTML = "";
+
+            if (searchInput !== "") {
+                const result = listQuotes.filter(word => word.quote.includes(searchInput));
+
+                result?.forEach(quote => {
+                    const listItem = document.createElement("li");
+                    listItem.textContent = quote.quote;
+                    quoteList.appendChild(listItem);
+                });
+            }
+        }
+
+        const quoteInput = document.getElementById("quoteInput");
+        quoteInput.addEventListener("input", searchQuote);
+
+        fetchQuotes();
+    </script>
+</body>
+
+</html>
